@@ -17,20 +17,21 @@
   <script src="<c:url value="/js/main.js" />"></script>
 </head>
 <body>
-<div class="container">
-  <form role="form">
-    <div class="form-group">
-      <label for="login">Login:</label>
-      <input type=text class="form-control" id="login" placeholder="Enter login">
+<div class="container text-center">
+  <form:form role="form" method="post" modelAttribute="userForm">
+    <div class="form-actions">
+      <div>
+        <label for="login">Login:</label>
+        <form:input type="text" class="form-control" id="login" path="login" placeholder="Enter login" />
+        <label for="pwd">Password:</label>
+        <form:input type="password" class="form-control" id="pwd" path="password" placeholder="Enter password" />
+      </div>
+      <div class="btn-group">
+        <button type="submit" class="btn btn-default" name="signIn">Sign in</button>
+        <button type="submit" class="btn btn-default" name="signUp">Sign up</button>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="pwd">Password:</label>
-      <input type="password" class="form-control" id="pwd" placeholder="Enter password">
-    </div>
-    <button type="submit" class="btn btn-default">Sign in</button>
-    <button type="submit" class="btn btn-default">Sign up</button>
-  </form>
+  </form:form>
 </div>
-
 </body>
 </html>

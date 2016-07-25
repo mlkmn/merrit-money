@@ -1,4 +1,4 @@
-package pl.mlkmn;
+package pl.mlkmn.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

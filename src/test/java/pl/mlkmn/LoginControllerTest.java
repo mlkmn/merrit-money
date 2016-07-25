@@ -30,7 +30,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void testLogin() throws Exception {
+    public void testLoginLandingPage() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"));
