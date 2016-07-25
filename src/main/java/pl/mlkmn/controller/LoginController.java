@@ -2,6 +2,7 @@ package pl.mlkmn.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,7 @@ import pl.mlkmn.validator.UserFormValidator;
 
 @Controller
 @RequestMapping("/")
-public class LoginController {
+public class LoginController implements InitializingBean {
 
     private final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
@@ -26,6 +27,7 @@ public class LoginController {
 
     @Autowired
     UserFormValidator userFormValidator;
+    
     @RequestMapping(method = RequestMethod.GET)
     public String login(Model model) {
         model.addAttribute("userForm", new User());
@@ -46,5 +48,14 @@ public class LoginController {
     protected void initBinder(WebDataBinder binder) {
         binder.setValidator(userFormValidator);
         
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 }

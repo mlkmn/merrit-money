@@ -22,4 +22,15 @@
 
     <mvc:annotation-driven />
 
+    <!-- Controllers -->
+
+    <bean id="loginController" class="pl.mlkmn.controller.LoginController">
+        <property name="userService" ref="userService"/>
+    </bean>
+
+    <!-- Services -->
+
+    <bean id="userService" class="pl.mlkmn.service.UserService">
+    </bean>
+
 </beans>
