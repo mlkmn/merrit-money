@@ -6,6 +6,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -35,13 +36,19 @@ public class LoginController implements InitializingBean {
     }
     
     @RequestMapping(params = "signIn", method = RequestMethod.POST)
-    public String signIn(@ModelAttribute("userForm") @Validated User user, Model model) {
-        return "signIn";
+    public String signIn(@ModelAttribute("userForm") @Validated User user, Model model, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "error";
+        }
+        return "dashboard";
     }
 
     @RequestMapping(params = "signUp", method = RequestMethod.POST)
-    public String signUp(@ModelAttribute("userForm") @Validated User user, Model model) {
-        return "signUp";
+    public String signUp(@ModelAttribute("userForm") @Validated User user, Model model, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "error";
+        }
+        return "register";
     }
     
     @InitBinder
