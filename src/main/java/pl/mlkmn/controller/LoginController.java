@@ -6,16 +6,16 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pl.mlkmn.model.User;
 import pl.mlkmn.service.UserService;
 import pl.mlkmn.validator.UserFormValidator;
+
+import javax.servlet.ServletResponse;
 
 @Controller
 @RequestMapping("/")
@@ -27,7 +27,7 @@ public class LoginController implements InitializingBean {
     private UserService userService;
 
     @Autowired
-    UserFormValidator userFormValidator;
+    private UserFormValidator userFormValidator;
     
     @RequestMapping(method = RequestMethod.GET)
     public String login(Model model) {
@@ -36,25 +36,23 @@ public class LoginController implements InitializingBean {
     }
     
     @RequestMapping(params = "signIn", method = RequestMethod.POST)
-    public String signIn(@ModelAttribute("userForm") @Validated User user, Model model, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "error";
+    public String signIn(@ModelAttribute("userForm") User user, Model model, ServletResponse response) {
+        Errors errors = new BeanPropertyBindingResult(user, "userForm");
+        userFormValidator.validate(user, errors);
+        if (errors.hasErrors()) {
+            return "login";
         }
         return "dashboard";
     }
 
     @RequestMapping(params = "signUp", method = RequestMethod.POST)
-    public String signUp(@ModelAttribute("userForm") @Validated User user, Model model, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "error";
+    public String signUp(@ModelAttribute("userForm") User user, Model model) {
+        Errors errors = new BeanPropertyBindingResult(user, "userForm");
+        userFormValidator.validate(user, errors);
+        if (errors.hasErrors()) {
+            return "login";
         }
         return "register";
-    }
-    
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        binder.setValidator(userFormValidator);
-        
     }
 
     @Override

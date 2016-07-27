@@ -21,10 +21,25 @@
   <form:form role="form" method="post" modelAttribute="userForm">
     <div class="form-actions">
       <div>
-        <label for="login">Login:</label>
-        <form:input type="text" class="form-control" id="login" path="login" placeholder="Enter login" />
-        <label for="pwd">Password:</label>
-        <form:input type="password" class="form-control" id="pwd" path="password" placeholder="Enter password" />
+        <form:hidden path="id" />
+        <spring:bind path="login">
+          <div class="form-group ${status.error ? 'has-error' : ''}">
+            <label class="col-sm-2 control-label">Login</label>
+            <div class="col-sm-10">
+                <form:input path="login" type="text" class="form-control" id="login" placeholder="Enter login" />
+                <form:errors path="login" class="control-label" />
+            </div>
+          </div>
+        </spring:bind>
+        <spring:bind path="password">
+          <div class="form-group ${status.error ? 'has-error' : ''}">
+            <label class="col-sm-2 control-label">Password</label>
+            <div class="col-sm-10">
+                <form:input path="password" type="text" class="form-control" id="password" placeholder="Enter password" />
+                <form:errors path="password" class="control-label" />
+            </div>
+          </div>
+        </spring:bind>
       </div>
       <div class="btn-group">
         <button type="submit" class="btn btn-default" name="signIn">Sign in</button>
