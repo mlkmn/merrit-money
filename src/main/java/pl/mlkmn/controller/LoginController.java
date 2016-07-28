@@ -64,8 +64,4 @@ public class LoginController {
 
         return Page.REGISTER.getName();
     }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 }
