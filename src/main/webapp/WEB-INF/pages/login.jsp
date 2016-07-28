@@ -16,7 +16,7 @@
   <script src="<c:url value="/js/jquery-2.1.4.min.js" />"></script>
   <script src="<c:url value="/js/main.js" />"></script>
 </head>
-<body>
+<body onload=$(window).resize()>
 <%--<script type="text/javascript" src="/js/main.js">$(window).resize()</script>--%>
 <div class="container text-center center-block">
       <form:form role="form" method="post" modelAttribute="userForm">
