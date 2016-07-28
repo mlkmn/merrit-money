@@ -7,15 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pl.mlkmn.model.User;
 import pl.mlkmn.service.UserService;
 import pl.mlkmn.validator.UserFormValidator;
-
-import javax.servlet.ServletResponse;
 
 @Controller
 @RequestMapping("/")
@@ -29,6 +31,11 @@ public class LoginController implements InitializingBean {
     @Autowired
     private UserFormValidator userFormValidator;
     
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(userFormValidator);
+    }
+    
     @RequestMapping(method = RequestMethod.GET)
     public String login(Model model) {
         model.addAttribute("userForm", new User());
@@ -36,17 +43,15 @@ public class LoginController implements InitializingBean {
     }
     
     @RequestMapping(params = "signIn", method = RequestMethod.POST)
-    public String signIn(@ModelAttribute("userForm") User user, Model model, ServletResponse response) {
-        Errors errors = new BeanPropertyBindingResult(user, "userForm");
-        userFormValidator.validate(user, errors);
-        if (errors.hasErrors()) {
+    public String signIn(@ModelAttribute("userForm") @Validated User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "login";
         }
         return "dashboard";
     }
 
     @RequestMapping(params = "signUp", method = RequestMethod.POST)
-    public String signUp(@ModelAttribute("userForm") User user, Model model) {
+    public String signUp(@ModelAttribute("userForm") User user) {
         Errors errors = new BeanPropertyBindingResult(user, "userForm");
         userFormValidator.validate(user, errors);
         if (errors.hasErrors()) {

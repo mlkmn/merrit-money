@@ -17,36 +17,40 @@
   <script src="<c:url value="/js/main.js" />"></script>
 </head>
 <body>
-<div class="container text-center">
-  <form:form role="form" method="post" modelAttribute="userForm">
-    <div class="form-actions">
-      <div>
-        <form:hidden path="id" />
-        <spring:bind path="login">
-          <div class="form-group ${status.error ? 'has-error' : ''}">
-            <label class="col-sm-2 control-label">Login</label>
-            <div class="col-sm-10">
-                <form:input path="login" type="text" class="form-control" id="login" placeholder="Enter login" />
-                <form:errors path="login" class="control-label" />
-            </div>
+<%--<script type="text/javascript" src="/js/main.js">$(window).resize()</script>--%>
+<div class="container text-center center-block">
+      <form:form role="form" method="post" modelAttribute="userForm">
+        <div class="form-actions">
+          <div>
+            <form:hidden path="id"/>
+            <spring:bind path="login">
+              <div class="form-group ${status.error ? 'has-error' : ''}">
+                <label class="control-label">Login</label>
+
+                <div class="form-actions">
+                  <form:input path="login" type="text" class="form-control" id="login" placeholder="Enter login"/>
+                  <form:errors path="login" class="control-label"/>
+                </div>
+              </div>
+            </spring:bind>
+            <spring:bind path="password">
+              <div class="form-group ${status.error ? 'has-error' : ''}">
+                <label class="control-label">Password</label>
+
+                <div class="form-actions">
+                  <form:input path="password" type="text" class="form-control" id="password"
+                              placeholder="Enter password"/>
+                  <form:errors path="password" class="control-label"/>
+                </div>
+              </div>
+            </spring:bind>
           </div>
-        </spring:bind>
-        <spring:bind path="password">
-          <div class="form-group ${status.error ? 'has-error' : ''}">
-            <label class="col-sm-2 control-label">Password</label>
-            <div class="col-sm-10">
-                <form:input path="password" type="text" class="form-control" id="password" placeholder="Enter password" />
-                <form:errors path="password" class="control-label" />
-            </div>
+          <div class="btn-group">
+            <button type="submit" class="btn btn-default" name="signIn">Sign in</button>
+            <button type="submit" class="btn btn-default" name="signUp">Sign up</button>
           </div>
-        </spring:bind>
-      </div>
-      <div class="btn-group">
-        <button type="submit" class="btn btn-default" name="signIn">Sign in</button>
-        <button type="submit" class="btn btn-default" name="signUp">Sign up</button>
-      </div>
-    </div>
-  </form:form>
+        </div>
+      </form:form>
 </div>
 </body>
 </html>
