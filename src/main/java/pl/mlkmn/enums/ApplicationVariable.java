@@ -1,19 +1,15 @@
 package pl.mlkmn.enums;
 
-public enum Page {
-    LOGIN ("login"),
-    REGISTER ("register"),
-    DASHBOARD ("dashboard"),
-    ERROR ("error");
+public enum ApplicationVariable {
+    MODEL_PACKAGE ("pl.mlkmn.model");
 
     private String name;
 
-    Page(String name){
+    ApplicationVariable(String name){
         this.name = name;
     }
-    
+
     public String getName(){
         return this.name;
     }
-
 }

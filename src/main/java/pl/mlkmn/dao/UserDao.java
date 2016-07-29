@@ -7,6 +7,8 @@ import java.util.List;
 public interface UserDao {
 
     User findById(Integer id);
+    
+    User findByLogin(String login);
 
     List<User> findAll();
 

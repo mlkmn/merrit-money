@@ -1,76 +1,67 @@
 package pl.mlkmn.config;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import pl.mlkmn.dao.UserDao;
+import pl.mlkmn.dao.UserDaoImpl;
+import pl.mlkmn.enums.ApplicationVariable;
+import pl.mlkmn.enums.DataSourceProperty;
 
 import javax.sql.DataSource;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.util.logging.Logger;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 @Configuration
+@EnableTransactionManagement
 public class SpringDBConfig {
 
     @Autowired
     DataSource dataSource;
 
     @Bean
-    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
-        return new NamedParameterJdbcTemplate(dataSource);
+    public DataSource getDataSource() throws IOException {
+        BasicDataSource dataSource = new BasicDataSource();
+        Properties dbProperties = new Properties();
+        InputStream propertiesFile = getClass().getClassLoader().getResourceAsStream("datasource.properties");
+        if (propertiesFile == null) {
+            propertiesFile = getClass().getClassLoader().getResourceAsStream("datasource.properties.default");
+        }
+
+        dbProperties.load(propertiesFile);
+        
+        dataSource.setDriverClassName(dbProperties.getProperty(DataSourceProperty.DRIVER_CLASS_NAME.getName()));
+        dataSource.setUrl(dbProperties.getProperty(DataSourceProperty.URL.getName()));
+        dataSource.setUsername(dbProperties.getProperty(DataSourceProperty.USERNAME.getName()));
+        dataSource.setPassword(dbProperties.getProperty(DataSourceProperty.PASSWORD.getName()));
+
+        return dataSource;
     }
 
-    @Bean
-    public DataSource getDataSource() {
-        return new DataSource() {
-            @Override
-            public Connection getConnection() throws SQLException {
-                return null;
-            }
+    @Autowired
+    @Bean(name = "sessionFactory")
+    public SessionFactory getSessionFactory(DataSource dataSource) {
+        LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
+        sessionBuilder.scanPackages(ApplicationVariable.MODEL_PACKAGE.getName());
+        return sessionBuilder.buildSessionFactory();
+    }
 
-            @Override
-            public Connection getConnection(String username, String password) throws SQLException {
-                return null;
-            }
-
-            @Override
-            public PrintWriter getLogWriter() throws SQLException {
-                return null;
-            }
-
-            @Override
-            public void setLogWriter(PrintWriter out) throws SQLException {
-
-            }
-
-            @Override
-            public void setLoginTimeout(int seconds) throws SQLException {
-
-            }
-
-            @Override
-            public int getLoginTimeout() throws SQLException {
-                return 0;
-            }
-
-            @Override
-            public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-                return null;
-            }
-
-            @Override
-            public <T> T unwrap(Class<T> iface) throws SQLException {
-                return null;
-            }
-
-            @Override
-            public boolean isWrapperFor(Class<?> iface) throws SQLException {
-                return false;
-            }
-        };
+    @Autowired
+    @Bean(name = "transactionManager")
+    public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
+        return new HibernateTransactionManager(sessionFactory);
+    }
+    
+    @Autowired
+    @Bean(name = "userDao")
+    public UserDao getUserDao(SessionFactory sessionFactory) {
+        return new UserDaoImpl(sessionFactory);
     }
 
 }

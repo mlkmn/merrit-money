@@ -21,6 +21,11 @@
   <div class="jumbotron">
     <h1>Merrit Money</h1>
   </div>
+  <c:if test="${not empty msg}">
+    <div class="alert alert-info alert-dismissible" role="alert">
+      <strong>${msg}</strong>
+    </div>
+  </c:if>
   <form:form role="form" method="post" modelAttribute="userForm">
     <div class="form-actions">
       <div>

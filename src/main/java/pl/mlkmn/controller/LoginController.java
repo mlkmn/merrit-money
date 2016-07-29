@@ -41,7 +41,10 @@ public class LoginController {
     }
     
     @RequestMapping(params = "signIn", method = RequestMethod.POST)
-    public String signIn(@ModelAttribute("userForm") @Validated User user, BindingResult bindingResult) {
+    public String signIn(@ModelAttribute("userForm") @Validated User user,
+                         BindingResult bindingResult,
+                         Model model) {
+        
         if (bindingResult.hasErrors()) {
             return Page.LOGIN.getName();
         }
@@ -50,10 +53,14 @@ public class LoginController {
         User loggedUser = userService.findByLogin(requestedLogin);
 
         if (loggedUser == null) {
+            model.addAttribute("msg", "User \"" + requestedLogin + "\" not found.");
             return Page.LOGIN.getName();
+        } else if (!loggedUser.getPassword().equals(user.getPassword())) {
+            model.addAttribute("msg", "Invalid password.");
+            return Page.LOGIN.getName();            
+        } else {
+            return Page.DASHBOARD.getName();
         }
-
-        return Page.DASHBOARD.getName();
     }
 
     @RequestMapping(params = "signUp", method = RequestMethod.POST)
