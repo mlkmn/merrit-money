@@ -58,17 +58,33 @@ public class LoginController {
         } else if (!loggedUser.getPassword().equals(user.getPassword())) {
             model.addAttribute("msg", "Invalid password.");
             return Page.LOGIN.getName();            
+        } else if (!loggedUser.getActivated()) {
+            model.addAttribute("msg", "User not activated.");
+            return Page.LOGIN.getName();
         } else {
             return Page.DASHBOARD.getName();
         }
     }
 
     @RequestMapping(params = "signUp", method = RequestMethod.POST)
-    public String signUp(@ModelAttribute("userForm") @Validated User user, BindingResult bindingResult) {
+    public String signUp(@ModelAttribute("userForm") @Validated User user,
+                         BindingResult bindingResult,
+                         Model model) {
+        
         if (bindingResult.hasErrors()) {
             return Page.LOGIN.getName();
         }
 
-        return Page.REGISTER.getName();
+        String requestedLogin = user.getLogin();
+        User loggedUser = userService.findByLogin(requestedLogin);
+
+        if (loggedUser != null && loggedUser.getLogin().equals(user.getLogin())) {
+            model.addAttribute("msg", "User \"" + requestedLogin + "\" already registered, choose different login");
+            return Page.LOGIN.getName();
+        } else {
+            userService.saveOrUpdate(user);
+            model.addAttribute("msg", "User \"" + requestedLogin + "\" registered, await activation.");
+            return Page.LOGIN.getName();
+        }
     }
 }

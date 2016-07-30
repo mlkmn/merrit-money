@@ -21,11 +21,9 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 public class SpringDBConfig {
-
+    
     @Autowired
-    DataSource dataSource;
-
-    @Bean
+    @Bean(name = "dataSource")
     public DataSource getDataSource() throws IOException {
         BasicDataSource dataSource = new BasicDataSource();
         Properties dbProperties = new Properties();

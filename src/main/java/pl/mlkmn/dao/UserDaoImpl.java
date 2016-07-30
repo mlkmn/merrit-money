@@ -12,6 +12,7 @@ import pl.mlkmn.model.User;
 import java.util.List;
 
 @Repository
+@Transactional
 public class UserDaoImpl implements UserDao {
     
     @Autowired
@@ -26,14 +27,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    @Transactional
     public User findById(Integer id) {
         Session session = this.sessionFactory.getCurrentSession();
         return (User) session.load(User.class, id);
     }
 
     @Override
-    @Transactional
     public User findByLogin(String login) {
         Session session = this.sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria(User.class);
@@ -42,7 +41,6 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    @Transactional
     @SuppressWarnings("unchecked")
     public List<User> findAll() {
         return (List<User>) sessionFactory
@@ -52,19 +50,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    @Transactional
-    public void save(User user) {
-
-    }
-
-    @Override
-    @Transactional
-    public void update(User user) {
-
+    public void saveOrUpdate(User user) {
+        Session session = this.sessionFactory.getCurrentSession();
+        session.saveOrUpdate(user);
     }
 
     @Override
     public void delete(Integer id) {
-
+        Session session = this.sessionFactory.getCurrentSession();
+        User userToDelete = new User();
+        userToDelete.setId(id);
+        session.delete(userToDelete);
     }
 }
