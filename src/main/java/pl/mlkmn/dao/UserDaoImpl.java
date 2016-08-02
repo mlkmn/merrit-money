@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class UserDaoImpl implements UserDao {
+public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
     
     @Autowired
     private SessionFactory sessionFactory;
@@ -28,14 +28,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findById(Integer id) {
-        Session session = this.sessionFactory.getCurrentSession();
-        return (User) session.load(User.class, id);
+        return super.getByKey(id);
     }
 
     @Override
     public User findByLogin(String login) {
-        Session session = this.sessionFactory.getCurrentSession();
-        Criteria criteria = session.createCriteria(User.class);
+        Criteria criteria = super.createEntityCriteria();
         criteria.add(Restrictions.eq("login", login));
         return (User) criteria.uniqueResult();
     }
@@ -56,10 +54,20 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void save(User user) {
+        super.persist(user);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
         Session session = this.sessionFactory.getCurrentSession();
         User userToDelete = new User();
         userToDelete.setId(id);
         session.delete(userToDelete);
+    }
+
+    @Override
+    public void delete(User user) {
+        super.delete(user);
     }
 }

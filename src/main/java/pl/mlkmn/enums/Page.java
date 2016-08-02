@@ -4,7 +4,9 @@ public enum Page {
     LOGIN ("login"),
     REGISTER ("register"),
     DASHBOARD ("dashboard"),
-    ERROR ("error");
+    ERROR ("error"),
+    ACCESS_DENIED ("accessDenied"),
+    ADMIN_PANEL ("adminPanel");
 
     private String name;
 
@@ -13,6 +15,11 @@ public enum Page {
     }
     
     public String getName(){
+        return this.name;
+    }
+    
+    @Override
+    public String toString() {
         return this.name;
     }
 

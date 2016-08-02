@@ -2,12 +2,12 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Access denied</title>
 </head>
 <body>
 <div>
-  This is a dashboard.
+  You are not authorized to access this page.
 </div>
-<a href="<c:url value="/logout" />">Logout</a>
+<a href="<c:url value="/" />">Go to home</a> OR <a href="<c:url value="/logout" />">Logout</a>
 </body>
 </html>

@@ -26,13 +26,7 @@ public class SpringDBConfig {
     @Bean(name = "dataSource")
     public DataSource getDataSource() throws IOException {
         BasicDataSource dataSource = new BasicDataSource();
-        Properties dbProperties = new Properties();
-        InputStream propertiesFile = getClass().getClassLoader().getResourceAsStream("datasource.properties");
-        if (propertiesFile == null) {
-            propertiesFile = getClass().getClassLoader().getResourceAsStream("datasource.properties.default");
-        }
-
-        dbProperties.load(propertiesFile);
+        Properties dbProperties = loadProperties();
         
         dataSource.setDriverClassName(dbProperties.getProperty(DataSourceProperty.DRIVER_CLASS_NAME.getName()));
         dataSource.setUrl(dbProperties.getProperty(DataSourceProperty.URL.getName()));
@@ -44,9 +38,10 @@ public class SpringDBConfig {
 
     @Autowired
     @Bean(name = "sessionFactory")
-    public SessionFactory getSessionFactory(DataSource dataSource) {
+    public SessionFactory getSessionFactory(DataSource dataSource) throws IOException {
         LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
         sessionBuilder.scanPackages(ApplicationVariable.MODEL_PACKAGE.getName());
+        sessionBuilder.addProperties(getHibernateProperties());
         return sessionBuilder.buildSessionFactory();
     }
 
@@ -60,6 +55,25 @@ public class SpringDBConfig {
     @Bean(name = "userDao")
     public UserDao getUserDao(SessionFactory sessionFactory) {
         return new UserDaoImpl(sessionFactory);
+    }
+
+    private Properties loadProperties() throws IOException {
+        Properties properties = new Properties();
+        InputStream propertiesFile = getClass().getClassLoader().getResourceAsStream("db.properties");
+        if (propertiesFile == null) {
+            propertiesFile = getClass().getClassLoader().getResourceAsStream("db.properties.default");
+        }
+        properties.load(propertiesFile);
+        return properties;
+    }
+
+    private Properties getHibernateProperties() throws IOException {
+        Properties properties = new Properties();
+        Properties dbProperties = loadProperties();
+        properties.put("hibernate.dialect", dbProperties.getProperty("hibernate.dialect"));
+        properties.put("hibernate.show_sql", dbProperties.getProperty("hibernate.show_sql"));
+        properties.put("hibernate.format_sql", dbProperties.getProperty("hibernate.format_sql"));
+        return properties;
     }
 
 }

@@ -21,17 +21,27 @@
   <div class="jumbotron">
     <h1>Merrit Money</h1>
   </div>
+  <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION and not empty error }">
+    <div class="alert alert-info" role="alert">
+      <strong>${SPRING_SECURITY_LAST_EXCEPTION.message}</strong>
+    </div>
+  </c:if>
+  <c:if test="${not empty error}">
+    <div class="alert alert-danger">
+      <strong>${error}</strong>
+    </div>
+  </c:if>
   <c:if test="${not empty msg}">
-    <div class="alert alert-info alert-dismissible" role="alert">
+    <div class="alert alert-info">
       <strong>${msg}</strong>
     </div>
   </c:if>
-  <form:form role="form" method="post" modelAttribute="userForm">
+  <form:form action="/login" role="form" method="post" modelAttribute="userForm">
     <div class="form-actions">
       <div>
         <form:hidden path="id"/>
         <spring:bind path="login">
-          <div class="form-group ${status.error ? 'has-error' : ''}">
+          <div class="form-group ${not empty error ? 'has-error' : ''}">
             <label class="control-label">Login</label>
 
             <div class="form-actions">
@@ -41,7 +51,7 @@
           </div>
         </spring:bind>
         <spring:bind path="password">
-          <div class="form-group ${status.error ? 'has-error' : ''}">
+          <div class="form-group ${not empty error ? 'has-error' : ''}">
             <label class="control-label">Password</label>
 
             <div class="form-actions">
@@ -53,10 +63,10 @@
       </div>
       <div class="btn-group">
         <button type="submit" class="btn btn-default" name="signIn">Sign in</button>
-        <button type="submit" class="btn btn-default" name="signUp">Sign up</button>
       </div>
     </div>
   </form:form>
+  <%--<button type="submit" class="btn btn-default" name="signUp">Sign up</button>--%>
 </div>
 </body>
 </html>

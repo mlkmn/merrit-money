@@ -13,7 +13,11 @@ public interface UserDao {
     List<User> findAll();
 
     void saveOrUpdate(User user);
+    
+    void save(User user);
 
-    void delete(Integer id);
+    void deleteById(Integer id);
+
+    void delete(User user);
 
 }

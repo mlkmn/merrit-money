@@ -1,24 +1,21 @@
 package pl.mlkmn.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class User {
+    
     private int id;
+    
     private String login;
+    
     private String password;
+    
     private boolean activated;
     
-    public User() {
-
-    }
-    
-    public User(String login, String password) {
-        this.login = login;
-        this.password = password;
-    }
+    private Set<Role> roles = new HashSet<>();
 
     @Id
     @GeneratedValue
@@ -52,5 +49,17 @@ public class User {
 
     public void setActivated(boolean activated) {
         this.activated = activated;
+    }
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "User_Role",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "role_id") })
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

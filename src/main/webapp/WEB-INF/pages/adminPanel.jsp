@@ -2,11 +2,11 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Admin Panel</title>
 </head>
 <body>
 <div>
-  This is a dashboard.
+  This is an admin panel.
 </div>
 <a href="<c:url value="/logout" />">Logout</a>
 </body>
