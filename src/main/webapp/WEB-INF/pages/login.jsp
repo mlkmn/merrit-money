@@ -18,9 +18,11 @@
 </head>
 <body onload=$(window).resize()>
 <div class="container text-center center-block">
-  <div class="jumbotron">
-    <h1>Merrit Money</h1>
-  </div>
+  <a class="link-unstyled" href="/">
+    <div class="jumbotron">
+      <h1>Merrit Money</h1>
+    </div>
+  </a>
   <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION and not empty error }">
     <div class="alert alert-info" role="alert">
       <strong>${SPRING_SECURITY_LAST_EXCEPTION.message}</strong>
